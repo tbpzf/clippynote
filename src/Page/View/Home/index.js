@@ -1,77 +1,19 @@
 import { useEffect, useState } from "react";
-import { Popover, Form, Input, Button } from "antd";
+import { Popconfirm, message } from "antd";
 import { DingtalkCircleFilled } from "@ant-design/icons";
 import { insertBlock } from "@/api/siyuan";
-// import './index.scss';
-
-const PreviewContent = (props) => {
-  const { message } = props;
-  const [loading, setLoading] = useState(false)
-  const onFinish = async (values) => {
-    setLoading(true);
-    await insertBlock({message})
-    setLoading(false)
-  }
-
-  return (
-    <Form
-      name="basic"
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
-      style={{ maxWidth: 600 }}
-      onFinish={onFinish}
-      onValuesChange={(changeValues, values) => {
-        console.log('change:', changeValues, values)
-      }}
-      initialValues={{
-        message,
-        originUrl: location.href,
-        saveServer: 'http://127.0.0.1:6806'
-      }}
-    >
-      <Form.Item
-        label="Message"
-        name="message"
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        label="Origin"
-        name="originUrl"
-        tooltip="data origin"
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        label="Server"
-        name="server"
-        tooltip="This is your notebook url, will send these text to your notebook"
-      >
-        <Input />
-      </Form.Item>
-
-
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit" loading={loading}>
-          Submit
-        </Button>
-      </Form.Item>
-    </Form>
-  );
-};
+import "./index.scss";
 
 const SelectionButton = () => {
   const [buttonPosition, setButtonPosition] = useState(null);
   const [text, setText] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const handleMouseUp = () => {
       const selection = window.getSelection();
       const selectText = selection.toString();
       if (!selectText) {
-        // click will clear the text
         return;
       }
       setText(selectText);
@@ -119,15 +61,32 @@ const SelectionButton = () => {
     };
   }, []);
 
+  const onConfirm = async () => {
+    const res = await insertBlock({
+      message: text,
+    });
+    if (res.code === 0) {
+      message.info("Save successfully");
+    } else {
+      message.error(res.msg || "Save failed");
+    }
+    setOpen(false);
+    setText("");
+  };
+
   return (
     <div>
-      {text && (
-        <Popover
-          className=""
-          title="Preview info"
-          content={() => <PreviewContent message={text} />}
-          trigger="click"
-        >
+      <Popconfirm
+        style={{ width: "500px" }}
+        title="Save these message?"
+        description={() => <div className="save_message">{text}</div>}
+        onConfirm={onConfirm}
+        onCancel={() => setOpen(false)}
+        okText="Yes"
+        cancelText="No"
+        open={open}
+      >
+        {text && (
           <DingtalkCircleFilled
             style={{
               fontSize: "24px",
@@ -136,9 +95,12 @@ const SelectionButton = () => {
               left: buttonPosition.left,
               zIndex: 1000,
             }}
+            onClick={() => {
+              setOpen(true);
+            }}
           />
-        </Popover>
-      )}
+        )}
+      </Popconfirm>
     </div>
   );
 };
