@@ -8,8 +8,7 @@ const webpack = require("webpack");
 const port = process.env.PORT || 3000;
 module.exports = {
 	entry: {
-		options: "./src/Page/Options/index.js",
-		popup: "./src/Page/Popup/index.js",
+		popup: "./src/Page/index.js",
 		background: "./src/Script/Background/index.js",
 		content: "./src/Script/Content/index.js",
 	},
@@ -53,7 +52,7 @@ module.exports = {
 					from: "public",
 					to: path.join(__dirname, "dist"),
 					globOptions: {
-						ignore: ["**/options.html", "**/popup.html"],
+						ignore: ["**/popup.html"],
 					},
 				},
 			],
@@ -61,7 +60,7 @@ module.exports = {
 				concurrency: 100,
 			},
 		}),
-		...["options", "popup"].map(name => {
+		...["popup"].map(name => {
 			return new HTMLPlugin({
 				title: `${name} page`,
 				filename: `${name}.html`,
@@ -81,7 +80,7 @@ module.exports = {
 			entries: {
 				contentScript: "content",
 				background: "background",
-				extensionPage: ["options", "popup"],
+				extensionPage: ["popup"],
 			},
 		}),
 	],
@@ -89,8 +88,7 @@ module.exports = {
 		extensions: [".tsx", ".ts", ".js"],
 		alias: {
 			"@": path.resolve(__dirname, "src/"),
-			"@PopupPage": path.resolve(__dirname, "src/Page/Popup/"),
-			"@OptionsPage": path.resolve(__dirname, "src/Page/Options/"),
+			"@Page": path.resolve(__dirname, "src/Page/"),
 			"@BackgroundScript": path.resolve(
 				__dirname,
 				"src/Script/Background/"

@@ -1,9 +1,9 @@
 // send message to the background script
+import React, { useEffect } from "react";
+import Tmouse from "@/Page/View/register";
 
-(async () => {
-	const res = await chrome.runtime.sendMessage({
-		message: "Sent message from content script",
-	});
+const main = () => {
+  Tmouse.register()
+}
 
-	console.log("got response from background script", res);
-})();
+main()

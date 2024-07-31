@@ -3,8 +3,7 @@
 		"baseUrl": "./src",
 		"paths": {
 			"@/*": ["*"],
-			"@PopupPage/*": ["Page/Popup/*"],
-			"@OptionsPage/*": ["Page/Options/*"],
+			"@PopupPage/*": ["Page/*"],
 			"@BackgroundScript/*": ["Script/Background/*"],
 			"@ContentScript/*": ["Script/Content/*"],
 			"@Component/*": ["Component/*"],

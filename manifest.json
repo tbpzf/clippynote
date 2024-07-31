@@ -1,7 +1,7 @@
 {
 	"version": "1.0.0",
 	"manifest_version": 3,
-	"name": "React Chrome Extension",
+	"name": "tmouse",
 	"description": "This is a Chrome extension built with React and TypeScript",
 	"icons": {
 		"16": "assets/logo192.png",
@@ -13,10 +13,6 @@
 		"default_icon": "assets/logo192.png",
 		"default_popup": "popup.html"
 	},
-	"options_ui": {
-		"page": "options.html",
-		"open_in_tab": true
-	},
 	"background": {
 		"service_worker": "bundle/script/background.js"
 	},
@@ -26,5 +22,5 @@
 			"js": ["bundle/script/content.js"]
 		}
 	],
-	"permissions": ["storage"]
+	"permissions": ["storage", "activeTab", "scripting"]
 }

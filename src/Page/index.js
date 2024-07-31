@@ -1,11 +1,11 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
-import View from "@OptionsPage/View";
+import StorageContext from "@/Context/Storage";
+import View from "@Page/View";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-	<React.StrictMode>
+	<StorageContext>
 		<View />
-	</React.StrictMode>
+	</StorageContext>
 );
