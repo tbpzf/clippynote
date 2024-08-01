@@ -55,13 +55,13 @@ export const insertBlock = async (params) => {
     const res = await createDoc({
       notebook: notebookId,
       path: `/${DEFAULT_DOC}`,
-      markdown: "testdaat1111",
+      markdown: "",
     });
     fileId = res?.data;
   }
 
   return request("http://127.0.0.1:6806/api/block/insertBlock", {
-    dataType: "markdown",
+    dataType: params?.dataType || 'markdown',
     data: params?.message,
     nextID: "",
     previousID: "",
