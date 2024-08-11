@@ -1,24 +1,50 @@
+import { message } from "antd";
 
 const request = async (url, data) => {
-    const headers = {
-        Authorization: 'token rtz3yse5lyu5cchj',
-        'Content-Type': 'application/json'
-    }
+  const originHeaders = {
+    "Content-Type": "application/json",
+  };
+  const { showToast = true, headers, ...restData } = data || {};
 
-    const response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(data)
+  return new Promise((resolve, reject) => {
+    fetch(url, {
+      method: "POST",
+      headers: {
+        ...originHeaders,
+        ...headers
+      },
+      body: JSON.stringify(restData),
     })
+      .then(async (response) => {
+        let errorText = "";
+        if (response.status === 401) {
+          errorText = "请设置token";
+        } else if (response.status === 404) {
+          errorText = "接口不存在";
+        } else if (!response.ok) {
+          errorText = `服务不可用 ${response.status}`;
+        }
 
-    if (response.status === 401) {
-        throw new Error('请设置token')
-    }
-    if (!response.ok) {
-        throw new Error('Service unavailable')
-    }
-
-    return await response.json()
-}
+        if (errorText) {
+          showToast && message.error(errorText);
+          throw new Error(errorText);
+        }
+        const result = await response.json();
+        resolve({
+          data: result.data,
+          error: null,
+        });
+      })
+      .catch((error) => {
+        if (["NetworkError", "TypeError"].includes(error.name)) {
+          showToast && message.error("请打开思源笔记");
+        }
+        resolve({
+          data: null,
+          error,
+        });
+      });
+  });
+};
 
 export default request;

@@ -62,14 +62,12 @@ const SelectionButton = () => {
   }, []);
 
   const onConfirm = async () => {
-    const res = await insertBlock({
-      dataType: 'markdown',
+    const { data, error } = await insertBlock({
+      dataType: "markdown",
       message: `${text} [source](${location.href})`,
     });
-    if (res.code === 0) {
+    if (!error) {
       message.info("Save successfully");
-    } else {
-      message.error(res.msg || "Save failed");
     }
     setOpen(false);
     setText("");
